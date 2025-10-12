@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import authRouter from './routes/auth';
 import { authenticate, requireRole } from './middleware/authenticate';
 import { errorHandler } from './middleware/errorHandler';
+import { HttpError } from './errors/httpError';
 
 const app = express();
 
@@ -15,7 +16,11 @@ app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok' });
 });
 
-app.get('/user/profile', authenticate, requireRole('user'), (req: Request, res: Response) => {
+app.get('/user/profile', authenticate, (req: Request, res: Response) => {
+  if (req.user?.role !== 'user') {
+    throw new HttpError(403, 'Access restricted to user role.');
+  }
+
   res.json({
     message: 'User profile data',
     user: {
