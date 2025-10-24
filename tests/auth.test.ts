@@ -13,7 +13,7 @@ async function login(username: string, password: string): Promise<{ token: strin
     .send({ username, password })
     .expect(200);
 
-  return { token: response.body.token, role: response.body.role };
+  return { token: response.body.access_token, role: response.body.role };
 }
 
 describe('Auth routes', () => {
@@ -26,13 +26,13 @@ describe('Auth routes', () => {
 
       expect(response.body).toEqual(
         expect.objectContaining({
-          token: expect.any(String),
+          access_token: expect.any(String),
           tokenType: 'Bearer',
           expiresIn: 3600,
           role: 'user'
         })
       );
-      expect(response.body.token).not.toHaveLength(0);
+      expect(response.body.access_token).not.toHaveLength(0);
     });
 
     it('rejects invalid credentials', async () => {
@@ -71,7 +71,7 @@ describe('Auth routes', () => {
 
       const verifyResponse = await request(app)
         .post('/api/auth/verify')
-        .send({ token: loginResponse.body.token })
+        .send({ token: loginResponse.body.access_token })
         .expect(200);
 
       expect(verifyResponse.body).toEqual(
