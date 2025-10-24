@@ -6,12 +6,12 @@ A minimal Express server written in TypeScript with dedicated routes for handlin
 
 - TypeScript-first Express setup with strict type checking.
 - MongoDB integration for user authentication.
-- `/auth/login` route validating credentials against MongoDB and returning a signed JWT with embedded role information.
-- `/auth/verify` route validating a provided JWT token.
-- Role-protected routes at `/user/profile` (user role) and `/admin/dashboard` (admin role).
+- `/api/auth/login` route validating credentials against MongoDB and returning a signed JWT with embedded role information.
+- `/api/auth/verify` route validating a provided JWT token.
+- Role-protected routes at `/api/user/profile` (user role) and `/api/admin/reports` (admin role).
 - Helmet, CORS, and JSON body parsing configured out of the box.
 - Centralized error handling with typed HTTP errors.
-- Health check endpoint at `/health`.
+- Health check endpoint at `/api/health`.
 - YAML-based configuration.
 
 ## Getting Started
@@ -79,7 +79,7 @@ npm start
 
 ## API
 
-### POST `/auth/login`
+### POST `/api/auth/login`
 
 Request body:
 
@@ -101,7 +101,7 @@ Response:
 }
 ```
 
-### POST `/auth/verify`
+### POST `/api/auth/verify`
 
 Request body:
 
@@ -125,7 +125,7 @@ Response:
 }
 ```
 
-### GET `/user/profile`
+### GET `/api/user/profile`
 
 Headers:
 
@@ -143,7 +143,7 @@ Response:
 }
 ```
 
-### GET `/admin/dashboard`
+### GET `/api/admin/reports`
 
 Headers:
 
