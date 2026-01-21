@@ -8,25 +8,27 @@ process.env.PORT = process.env.PORT ?? '0';
 
 beforeAll(async () => {
   // Connect to the in-memory database
-  const { connectDatabase } = await import('../src/config/database.ts');
-  await connectDatabase();
+  const db = await import('../src/config/database.ts');
+  await db.connectDatabase();
+  const em = db.orm.em.fork();
 
   // Create test users
   const { User } = await import('../src/models/User.ts');
 
+
   const users = [
-    { username: process.env.AUTH_ADMIN_USERNAME, password: process.env.AUTH_ADMIN_PASSWORD, role: 'admin' as const },
-    { username: process.env.AUTH_USER_USERNAME, password: process.env.AUTH_USER_PASSWORD, role: 'user' as const }
+    { username: process.env.AUTH_ADMIN_USERNAME!, password: process.env.AUTH_ADMIN_PASSWORD!, role: 'admin' as const },
+    { username: process.env.AUTH_USER_USERNAME!, password: process.env.AUTH_USER_PASSWORD!, role: 'user' as const }
   ];
 
   for (const userData of users) {
     try {
-      const existingUser = await User.findOne({ username: userData.username });
+      const existingUser = await em.findOne(User, { username: userData.username });
       if (existingUser) {
         continue;
       }
-      const user = new User(userData);
-      await user.save();
+      const user = em.create(User, userData);
+      await em.persistAndFlush(user);
     } catch (error) {
       console.error(`Error creating test user ${userData.username}:`, error);
     }

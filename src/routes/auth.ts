@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import jwt from 'jsonwebtoken';
+import { RequestContext } from '@mikro-orm/core';
 import { env, UserRole } from '../config/env';
 import { HttpError } from '../errors/httpError';
 import { User } from '../models/User';
+
 
 interface LoginRequestBody {
   username?: unknown;
@@ -26,7 +28,8 @@ function parseCredentials(body: LoginRequestBody): { username: string; password:
 }
 
 async function authorizeUser(username: string, password: string): Promise<{ username: string; role: UserRole }> {
-  const user = await User.findOne({ username, password });
+  const em = RequestContext.getEntityManager()!;
+  const user = await em.findOne(User, { username, password });
 
   if (!user) {
     throw new HttpError(401, 'Invalid credentials.');

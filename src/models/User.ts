@@ -1,16 +1,19 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import { Entity, PrimaryKey, Property, Unique } from '@mikro-orm/core';
+import { ObjectId } from '@mikro-orm/mongodb';
 import { UserRole } from '../config/env';
 
-export interface IUser extends Document {
-  username: string;
-  password: string;
-  role: UserRole;
+@Entity({ collection: 'users' })
+export class User {
+  @PrimaryKey()
+  _id!: ObjectId;
+
+  @Property({ type: 'string' })
+  @Unique()
+  username!: string;
+
+  @Property({ type: 'string' })
+  password!: string;
+
+  @Property({ type: 'string' })
+  role!: UserRole;
 }
-
-const userSchema = new Schema<IUser>({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: { type: String, required: true, enum: ['admin', 'user'] }
-});
-
-export const User = mongoose.model<IUser>('User', userSchema);

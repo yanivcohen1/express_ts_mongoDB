@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
+import { RequestContext } from '@mikro-orm/core';
+import { orm } from './config/database';
 import authRouter from './routes/auth';
 import { authenticate, requireRole } from './middleware/authenticate';
 import { errorHandler } from './middleware/errorHandler';
@@ -15,8 +17,10 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use((_req, _res, next) => RequestContext.create(orm.em, next));
 
 app.use('/api/auth', authRouter);
+
 
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok' });

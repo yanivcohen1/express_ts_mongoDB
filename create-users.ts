@@ -1,8 +1,9 @@
-import { connectDatabase, disconnectDatabase } from './src/config/database';
+import { connectDatabase, disconnectDatabase, orm } from './src/config/database';
 import { User } from './src/models/User';
 
 async function createUsers() {
   await connectDatabase();
+  const em = orm.em.fork();
 
   const users = [
     { username: 'admin@example.com', password: 'Admin123!', role: 'admin' as const },
@@ -11,14 +12,14 @@ async function createUsers() {
 
   for (const userData of users) {
     try {
-      const existingUser = await User.findOne({ username: userData.username });
+      const existingUser = await em.findOne(User, { username: userData.username });
       if (existingUser) {
         console.log(`User ${userData.username} already exists, skipping.`);
         continue;
       }
 
-      const user = new User(userData);
-      await user.save();
+      const user = em.create(User, userData);
+      await em.persistAndFlush(user);
       console.log(`Created user: ${userData.username}`);
     } catch (error) {
       console.error(`Error creating user ${userData.username}:`, error);

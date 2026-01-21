@@ -1,6 +1,6 @@
 # Express + TypeScript + MongoDB Authorization API
 
-A minimal Express server written in TypeScript with dedicated routes for handling user authorization flows and JWT issuance, using MongoDB for user storage.
+A minimal Express server written in TypeScript with dedicated routes for handling user authorization flows and JWT issuance, using MongoDB for user storage via MikroORM.
 
 ## Features
 
@@ -22,7 +22,7 @@ A minimal Express server written in TypeScript with dedicated routes for handlin
 - pnpm 8+
 - MongoDB 3.6+ (tested with 3.6.23)
 
-**Note:** This application uses Mongoose 5.13.x for compatibility with MongoDB 3.6.23. Be aware that this version has known security vulnerabilities. For production use, consider upgrading to MongoDB 4.2+ and Mongoose 8.x.
+**Note:** This application uses MikroORM 5.x for MongoDB integration. It is configured to use the `MongoDriver` and `TsMorphMetadataProvider`. Ensure that your environment supports TypeScript decorators, as they are used for entity definitions.
 
 ### Installation
 
@@ -94,7 +94,7 @@ express_ts/
 │   ├── config/         # Configuration logic (database connection, env vars)
 │   ├── errors/         # Custom HTTP error classes
 │   ├── middleware/     # Express middleware (auth, error handling)
-│   ├── models/         # Mongoose models and schemas
+│   ├── models/         # MikroORM entities
 │   ├── routes/         # API route definitions
 │   ├── types/          # TypeScript custom type definitions
 │   ├── app.ts          # Express application configuration

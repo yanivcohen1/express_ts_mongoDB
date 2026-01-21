@@ -12,6 +12,8 @@
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "types": ["node", "vitest/globals"]
   },
   "include": ["src", "tests", "create-users.ts"],
