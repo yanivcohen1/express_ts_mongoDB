@@ -1,15 +1,13 @@
 import { connectDatabase, disconnectDatabase, orm } from './src/config/database';
 import { User } from './src/models/User';
 import { hashPassword } from './src/lib/password';
+import { env } from './src/config/env';
 
 async function createUsers() {
   await connectDatabase();
   const em = orm.em.fork();
 
-  const users = [
-    { username: process.env.AUTH_ADMIN_USERNAME || 'admin@example.com', password: process.env.AUTH_ADMIN_PASSWORD || 'Admin123!', role: 'admin' as const },
-    { username: process.env.AUTH_USER_USERNAME || 'user@example.com', password: process.env.AUTH_USER_PASSWORD || 'User123!', role: 'user' as const }
-  ];
+  const users = env.credentials;
 
   for (const userData of users) {
     try {

@@ -40,8 +40,19 @@ const ADMIN_PASSWORD = process.env.AUTH_ADMIN_PASSWORD ?? process.env.AUTH_PASSW
 const USER_USERNAME = process.env.AUTH_USER_USERNAME;
 const USER_PASSWORD = process.env.AUTH_USER_PASSWORD;
 
-const MONGO_URI = config.ConnectionStrings.MongoConnection;
-const MONGO_DB = 'express_ts'; // hardcoded or from config?
+const MONGO_URI = process.env.MONGO_URI ?? config.ConnectionStrings.MongoConnection;
+
+// Helper to extract DB name from Mongo URI
+const getDbNameFromUri = (uri: string) => {
+  try {
+    const url = new URL(uri);
+    return url.pathname.split('/').pop() || undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const MONGO_DB = process.env.MONGO_DB ?? getDbNameFromUri(MONGO_URI) ?? 'express_ts';
 const MONGO_READ_ADMIN_USERNAME = process.env.MONGO_READ_ADMIN_USERNAME;
 const MONGO_READ_ADMIN_PASSWORD = process.env.MONGO_READ_ADMIN_PASSWORD;
 
